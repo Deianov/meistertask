@@ -2,14 +2,16 @@ package meisterTask.entities;
 
 import javax.persistence.*;
 
+// represent class Task as database Table
 @Entity
+// set database table name -> "tasks"
 @Table(name = "tasks")
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(name = "title", columnDefinition = "text", nullable = false)
     private String title;
 
     @Column(nullable = false)

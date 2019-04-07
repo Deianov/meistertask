@@ -32,22 +32,21 @@ public class TaskController {
 
     @GetMapping("/create")
     public ModelAndView create(ModelAndView modelAndView) {
-
         modelAndView.setViewName("base-layout");
         modelAndView.addObject("view", "task/create");
         return modelAndView;
     }
 
     @PostMapping("/create")
-    public String create(Task task) {
-        this.taskRepository.saveAndFlush(task);
+    public String create(TaskBindingModel taskBindingModel) {
+        this.taskRepository.saveAndFlush(new Task(taskBindingModel.getTitle(), taskBindingModel.getStatus()));
         return "redirect:/";
     }
 
     @GetMapping("/edit/{id}")
     public ModelAndView edit(ModelAndView modelAndView,
                              @PathVariable(value = "id") Integer id) {
-        Task task = this.taskRepository.findById(id).get();
+        Task task = this.taskRepository.getOne(id);
         modelAndView.setViewName("base-layout");
         modelAndView.addObject("view", "task/edit");
         modelAndView.addObject("task", task);
@@ -57,7 +56,7 @@ public class TaskController {
     @PostMapping("/edit/{id}")
     public String edit(TaskBindingModel taskBindingModel,
                        @PathVariable(value = "id") Integer id) {
-        Task task = this.taskRepository.findById(id).get();
+        Task task = this.taskRepository.getOne(id);
 
         task.setStatus(taskBindingModel.getStatus());
         task.setTitle(taskBindingModel.getTitle());
@@ -67,9 +66,8 @@ public class TaskController {
     }
 
     @GetMapping("/delete/{id}")
-    public ModelAndView delete(ModelAndView modelAndView,
-                             @PathVariable(value = "id") Integer id) {
-        Task task = this.taskRepository.findById(id).get();
+    public ModelAndView delete(ModelAndView modelAndView, @PathVariable(value = "id") Integer id) {
+        Task task = this.taskRepository.getOne(id);
         modelAndView.setViewName("base-layout");
         modelAndView.addObject("view", "task/delete");
         modelAndView.addObject("task", task);
